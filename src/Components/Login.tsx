@@ -2,15 +2,23 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../../Firebase";
 import { signInWithPopup } from "firebase/auth";
 import { GoogleAuthProvider } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../Firebase";
+import { ContextWrapper } from "./ContextWrapper";
+import { useContext } from "react";
 
-const Login = (props: {
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
+const Login = () => {
+  const { setIsLoggedIn } = useContext(ContextWrapper);
   const navigate = useNavigate();
   const handleSignIn = async () => {
-    const result = await signInWithPopup(auth, new GoogleAuthProvider());
-    console.log(result);
-    props.setIsLoggedIn(true);
+    const userData = await signInWithPopup(auth, new GoogleAuthProvider());
+    await setDoc(doc(db, "users", userData.user.uid), {
+      uid: userData.user.uid,
+      name: userData.user.displayName,
+      email: userData.user.email,
+      profile_pic: userData.user.photoURL,
+    });
+    setIsLoggedIn(true);
     navigate("/home");
   };
   return (

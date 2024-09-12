@@ -1,19 +1,13 @@
-import React from "react";
-import { signOut } from "firebase/auth";
-import { auth } from "../../Firebase";
-
-const Home = (props: {
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
-  const handleSignOut = async () => {
-    await signOut(auth);
-    props.setIsLoggedIn(false);
-  };
+import Sidebar from "./Sidebar";
+import ChatWindow from "./ChatWindow";
+const Home = () => {
   return (
-    <div>
-      <h1>This is Home page</h1>
-      <button onClick={handleSignOut}>Sign Out</button>
-    </div>
+    <>
+      <div className="flex bg-neutral-900 h-screen">
+        <Sidebar />
+        <ChatWindow />
+      </div>
+    </>
   );
 };
 
